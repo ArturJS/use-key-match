@@ -3,15 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <title>React + esbuild-wasm</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 </head>
 <body>
   <div id="root"></div>
 
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom": "https://esm.sh/react-dom@18.2.0"
+      }
+    }
+  </script>
+
   <script type="text/babel">
-    import React, { useState } from 'https://esm.sh/react@18.2.0';
-    import ReactDOM from 'https://esm.sh/react-dom@18.2.0';
+    import React, { useState } from 'react';
+    import ReactDOM from 'react-dom';
 
     function App() {
         const [count, setCount] = useState(0);
