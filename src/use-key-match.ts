@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { keyMatch } from './key-match.ts';
-import type { KeyMatchCallbacks, KeyMatchCallbacksFlexible } from './types.ts';
+import type { KeyMatchCallbacks, KeyMatchCallbacksStrict } from './types.ts';
 
+export function useKeyMatch(callbacks: KeyMatchCallbacksStrict): void;
 export function useKeyMatch(callbacks: KeyMatchCallbacks): void;
-export function useKeyMatch(callbacks: KeyMatchCallbacksFlexible): void;
-export function useKeyMatch(callbacks: KeyMatchCallbacks | KeyMatchCallbacksFlexible): void {
+export function useKeyMatch(callbacks: KeyMatchCallbacksStrict | KeyMatchCallbacks): void {
     useEffect(() => {
         const abortController = new AbortController();
 

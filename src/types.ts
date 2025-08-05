@@ -30,6 +30,6 @@ export type KeyboardPattern = CommonPattern | KeyboardPatternString;
 export const keyPattern = <T extends string>(pattern: T): KeyboardPatternString => 
   pattern as unknown as KeyboardPatternString;
 
-export type KeyMatchCallbacks = Record<CommonPattern | string, (event?: KeyboardEvent) => void>;
+export type KeyMatchCallbacks = Record<KeyboardPattern, (event?: KeyboardEvent) => void>;
 
-export type KeyMatchCallbacksFlexible = Record<string, (event?: KeyboardEvent) => void>;
+export type KeyMatchCallbacksStrict = Partial<Record<KeyboardPattern, (event?: KeyboardEvent) => void>>;
