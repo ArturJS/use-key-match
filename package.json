@@ -1,8 +1,21 @@
 {
-  "name": "use-key-down",
-  "version": "0.0.1",
-  "private": true,
-  "description": "React hook for mapping keyboard events to callbacks",
+  "name": "use-key-match",
+  "version": "1.0.0",
+  "private": false,
+  "author": "ArturJS",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "hook",
+    "keyboard",
+    "event",
+    "match"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArturJS/use-key-match"
+  },
+  "description": "React hook for matching keyboard events with callbacks",
   "type": "module",
   "files": [
     "dist"
@@ -21,6 +34,7 @@
     "test": "node scripts/test.js"
   },
   "devDependencies": {
+    "@types/node": "^24.2.0",
     "http-server": "^14.1.1",
     "react": "^19.1.1",
     "tsdown": "0.13.0",
