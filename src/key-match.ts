@@ -1,4 +1,7 @@
-const isMacOS = (() => {
+/**
+ * Dynamically checks if we're on macOS
+ */
+function getIsMacOS(): boolean {
     if (typeof navigator === 'undefined') {
         return false;
     }
@@ -12,7 +15,7 @@ const isMacOS = (() => {
     })();
 
     return platform.toUpperCase().indexOf('MAC') >= 0;
-})()
+}
 
 /**
  * Parses modifiers from an array of modifier strings
@@ -32,7 +35,7 @@ function parseModifiers(modifierParts: string[]) {
         break;
       case 'cmdorctrl':
       case 'commandorcontrol':
-        if (isMacOS) {
+        if (getIsMacOS()) {
           meta = true;
         } else {
           ctrl = true;
@@ -42,7 +45,7 @@ function parseModifiers(modifierParts: string[]) {
         alt = true;
         break;
       case 'option':
-        if (isMacOS) {
+        if (getIsMacOS()) {
           alt = true;
         }
         break;
@@ -112,20 +115,21 @@ function parseMatchString(matchString: string) {
 
   // Protect modifiers that contain "or" from being split by using placeholders
   let processedString = matchString
-    .replace(/cmdorctrl/gi, '__CMDORCTRL__')
-    .replace(/commandorcontrol/gi, '__COMMANDORCONTROL__');
+    .replace(/cmdorctrl/gi, '__CMDCTRL__')
+    .replace(/commandorcontrol/gi, '__COMMANDCONTROL__');
 
   // Split by "Or" to handle multiple key combinations like "EnterOrSpace"
   const keyAlternatives = processedString.split(/or/i);
   
   // Restore the protected modifiers
   const restoredAlternatives = keyAlternatives.map(alt => 
-    alt.replace(/__CMDORCTRL__/g, 'cmdorctrl')
-       .replace(/__COMMANDORCONTROL__/g, 'commandorcontrol')
+    alt.replace(/__CMDCTRL__/g, 'cmdorctrl')
+       .replace(/__COMMANDCONTROL__/g, 'commandorcontrol')
   );
   
   if (restoredAlternatives.length === 1) {
-    return parseSingleKeyMatch(matchString);
+    // Use the processed and restored string for single key combinations too
+    return parseSingleKeyMatch(restoredAlternatives[0]);
   } else {
     return parseMultipleKeyMatch(restoredAlternatives);
   }

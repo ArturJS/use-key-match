@@ -17,7 +17,8 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
-    "demo": "npx http-server ./demo -c-1 --cors"
+    "demo": "npx http-server ./demo -c-1 --cors",
+    "test": "bun test"
   },
   "devDependencies": {
     "http-server": "^14.1.1",
