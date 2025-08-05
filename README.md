@@ -1,9 +1,9 @@
-# use-key-down
+# use-key-match
 
 > A powerful React hook for mapping keyboard events to callbacks with intuitive pattern matching
 
 [![CI](https://github.com/ArturJS/use-key-match/actions/workflows/ci.yml/badge.svg)](https://github.com/ArturJS/use-key-match/actions/workflows/ci.yml)
-[![npm version](https://badge.fury.io/js/use-key-down.svg)](https://badge.fury.io/js/use-key-down)
+[![npm version](https://badge.fury.io/js/use-key-match.svg)](https://badge.fury.io/js/use-key-match)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
 ## Features
@@ -19,18 +19,18 @@
 ## Installation
 
 ```bash
-npm install use-key-down
+npm install use-key-match
 # or
-yarn add use-key-down
+yarn add use-key-match
 # or
-pnpm add use-key-down
+pnpm add use-key-match
 ```
 
 ## Quick Start
 
 ```tsx
 import React from 'react';
-import { useKeyMatch } from 'use-key-down';
+import { useKeyMatch } from 'use-key-match';
 
 function App() {
   useKeyMatch({
@@ -48,7 +48,7 @@ function App() {
 ### Simple Key Handling
 
 ```tsx
-import { useKeyMatch } from 'use-key-down';
+import { useKeyMatch } from 'use-key-match';
 
 function DocumentEditor() {
   useKeyMatch({

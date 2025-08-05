@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ArturJS/use-key-match"
+    "url": "git+https://github.com/ArturJS/use-key-match.git"
   },
   "description": "React hook for matching keyboard events with callbacks",
   "type": "module",
