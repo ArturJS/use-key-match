@@ -1,3 +1,2 @@
-export function myFunction() {
-  return 'Hello, world!'
-}
+export * from './key-match.ts';
+export * from './use-key-match.ts';

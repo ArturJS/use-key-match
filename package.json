@@ -16,10 +16,16 @@
   },
   "scripts": {
     "build": "tsdown",
-    "dev": "tsdown --watch"
+    "dev": "tsdown --watch",
+    "demo": "npx http-server ./demo -c-1 --cors"
   },
   "devDependencies": {
+    "http-server": "^14.1.1",
+    "react": "^19.1.1",
     "tsdown": "0.13.0",
     "typescript": "^5.9.2"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
   }
 }
