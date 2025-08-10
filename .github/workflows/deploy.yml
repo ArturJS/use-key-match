@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for tags
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -47,6 +49,63 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Get previous release tag
+        id: previous_tag
+        run: |
+          # Get the previous tag (excluding the current one)
+          PREVIOUS_TAG=$(git tag --sort=-version:refname | grep -v "^${{ steps.get_version.outputs.VERSION }}$" | head -n 1)
+          echo "PREVIOUS_TAG=${PREVIOUS_TAG}" >> $GITHUB_OUTPUT
+          echo "Previous tag: ${PREVIOUS_TAG}"
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          CURRENT_TAG="${{ steps.get_version.outputs.VERSION }}"
+          PREVIOUS_TAG="${{ steps.previous_tag.outputs.PREVIOUS_TAG }}"
+
+          echo "Generating release notes from ${PREVIOUS_TAG} to ${CURRENT_TAG}"
+
+          # Generate release notes with PR titles
+          if [ -n "$PREVIOUS_TAG" ]; then
+            # Get commits since previous tag and extract PR numbers
+            RELEASE_NOTES=$(git log ${PREVIOUS_TAG}..HEAD --oneline --grep="Merge pull request" --pretty=format:"%s" | \
+              sed -n 's/.*Merge pull request #\([0-9]*\) from .*/- #\1/p' | \
+              while read line; do
+                if [ -n "$line" ]; then
+                  PR_NUM=$(echo "$line" | sed 's/- #//')
+                  # Get PR title from GitHub API
+                  PR_TITLE=$(curl -s -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
+                    "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUM}" | \
+                    jq -r '.title // empty')
+                  if [ -n "$PR_TITLE" ]; then
+                    echo "- ${PR_TITLE} (#${PR_NUM})"
+                  else
+                    echo "$line"
+                  fi
+                fi
+              done)
+
+            # If no PRs found, fall back to commit messages
+            if [ -z "$RELEASE_NOTES" ]; then
+              RELEASE_NOTES=$(git log ${PREVIOUS_TAG}..HEAD --oneline --pretty=format:"- %s" | head -20)
+            fi
+          else
+            RELEASE_NOTES="- Initial release"
+          fi
+
+          # Create the full release body
+          RELEASE_BODY="## Release ${CURRENT_TAG}
+
+          ### What's Changed
+          ${RELEASE_NOTES}
+
+          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...${CURRENT_TAG}"
+
+          # Save to output (escape newlines for GitHub Actions)
+          echo "RELEASE_BODY<<EOF" >> $GITHUB_OUTPUT
+          echo "$RELEASE_BODY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: actions/create-release@v1
         env:
@@ -54,10 +113,6 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ steps.get_version.outputs.VERSION }}
-          body: |
-            Release ${{ steps.get_version.outputs.VERSION }}
-
-            Changes in this version:
-            - Please update this with actual release notes
+          body: ${{ steps.release_notes.outputs.RELEASE_BODY }}
           draft: false
           prerelease: false
